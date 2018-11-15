@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.mybatis.persistence.GrideMapper">
+
+	<update id="createTableTeacher">
+		CREATE TABLE IF NOT EXISTS Teacher
+		(
+		Number INT(11) NOT NULL,
+		ID CHAR(15) NOT NULL,
+		PW VARCHAR(50) NOT NULL,
+		Question VARCHAR(100) NOT NULL,
+		Answer_1 CHAR(10) NOT NULL,
+		Answer_2 CHAR(10) NOT NULL,
+		Answer_3 CHAR(10) NOT NULL,
+		Answer_4 CHAR(10) NOT NULL,
+		Answer_5 CHAR(10) NOT NULL,
+		PRIMARY KEY(Number)
+		)
+	</update>
+
+	<update id="createTableGride">
+		CREATE TABLE IF NOT EXISTS Gride
+		(
+		Number INT(11) NOT NULL AUTO_INCREMENT,
+		Student Char(30) NOT NULL, 
+		ID CHAR(15) NOT NULL,
+		Question VARCHAR(100) NOT NULL,
+		Answer_1 CHAR(10) NOT NULL,
+		Answer_2 CHAR(10) NOT NULL,
+		Answer_3 CHAR(10) NOT NULL,
+		Answer_4 CHAR(10) NOT NULL,
+		Answer_5 CHAR(10) NOT NULL,
+		Score INT(11) NOT NULL,
+		Rating CHAR(10) NOT NULL,
+		PRIMARY KEY(Number)
+		)
+	</update>
+	
+	<insert id="teacherInsert" parameterType="teacher">
+		INSERT INTO Teacher
+		(Number, ID, PW, Question, Answer_1, Answer_2, Answer_3, Answer_4, Answer_5)
+		VALUES (#{number}, #{id}, #{pw}, #{question}, #{answer1}, #{answer2}, #{answer3}, #{answer4}, #{answer5})
+	</insert>
+	
+	<select id="countTeacher" parameterType="string" resultType="int">
+		SELECT COUNT(*) FROM Teacher
+	</select>
+	
+	<select id="idSelect" parameterType="string" resultType="string">
+		SELECT * FROM Teacher WHERE ID = #{id}
+	</select>
+	
+	<select id="loginSelect" parameterType="teacher" resultType="teacher">
+		SELECT * FROM Teacher WHERE ID = #{id} AND PW = #{pw}
+	</select>
+	
+	<select id="teacherListSelect" resultType="java.util.HashMap">
+		SELECT * FROM Teacher
+	</select>
+	
+	
+</mapper>
