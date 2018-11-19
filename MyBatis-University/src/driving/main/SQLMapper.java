@@ -14,6 +14,7 @@ import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+import org.mybatis.domain.Gride;
 import org.mybatis.domain.Teacher;
 
 public class SQLMapper {
@@ -148,6 +149,26 @@ public class SQLMapper {
 		
 	}
 	
+	/* 통합 DB Count */
+	public int sqlGrideCount() {
+		
+		int count = 0;
+		
+		try {
+			
+			transactionOpen();
+			count = sqlSession.selectOne(parameter + "GrideMapper.countGride");
+			transactionClose();
+			
+			
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		return count;
+		
+	}
+	
 	/* 교수 등록*/
 	public int sqlIdInsert(Teacher teacher) {
 		
@@ -172,6 +193,42 @@ public class SQLMapper {
 		
 	}
 	
+	/* 통합 DB 등록 */
+	public int sqlGrideInsert(Gride gride) {
+		
+		int tmp = 0;
+		
+		try {
+			
+			transactionOpen();
+			tmp = sqlSession.insert(parameter + "GrideMapper.grideInsert", gride);
+			sqlSession.commit();
+			transactionClose();
+			
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		return tmp;
+		
+	}
+	
+	public void sqlGrideUpdate(Gride gride) {
+		
+		try {
+			
+			transactionOpen();			
+			sqlSession.update(parameter + "GrideMapper.grideUpdate", gride);
+			sqlSession.commit();
+			transactionClose();
+			
+			
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
 	/* 교수 Login */
 	public Teacher sqlLoginCheck(Teacher teacher) {
 		
@@ -190,7 +247,7 @@ public class SQLMapper {
 		
 	}
 	
-	/* 랜던 교수 선택 */
+	/* 랜덤 교수 선택 */
 	public HashMap<Integer, Object> sqlTeacherSelect(HashMap<Integer, Object> results) {
 		
 		try {

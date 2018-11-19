@@ -24,17 +24,17 @@
 	<update id="createTableGride">
 		CREATE TABLE IF NOT EXISTS Gride
 		(
-		Number INT(11) NOT NULL AUTO_INCREMENT,
-		Student Char(30) NOT NULL, 
-		ID CHAR(15) NOT NULL,
-		Question VARCHAR(100) NOT NULL,
-		Answer_1 CHAR(10) NOT NULL,
-		Answer_2 CHAR(10) NOT NULL,
-		Answer_3 CHAR(10) NOT NULL,
-		Answer_4 CHAR(10) NOT NULL,
-		Answer_5 CHAR(10) NOT NULL,
-		Score INT(11) NOT NULL,
-		Rating CHAR(10) NOT NULL,
+		Number INT(11) ,
+		Student Char(30), 
+		ID CHAR(15) ,
+		Question VARCHAR(100),
+		Answer_1 CHAR(10),
+		Answer_2 CHAR(10),
+		Answer_3 CHAR(10),
+		Answer_4 CHAR(10),
+		Answer_5 CHAR(10),
+		Score INT(11),
+		Rating CHAR(10),
 		PRIMARY KEY(Number)
 		)
 	</update>
@@ -45,8 +45,32 @@
 		VALUES (#{number}, #{id}, #{pw}, #{question}, #{answer1}, #{answer2}, #{answer3}, #{answer4}, #{answer5})
 	</insert>
 	
+	<insert id="grideInsert" parameterType="gride">
+		INSERT INTO Gride
+		(Number, Student, ID,  Question, Answer_1, Answer_2, Answer_3, Answer_4, Answer_5, Score, Rating)
+		VALUES (#{number}, #{student}, #{teacher.id}, #{teacher.question},
+		#{teacher.answer1}, #{teacher.answer2}, #{teacher.answer3}, #{teacher.answer4}, #{teacher.answer5},
+		#{score}, #{rating})
+	</insert>
+	
+	<update id="grideUpdate" parameterType="gride">
+	
+		UPDATE Gride
+		SET Answer_1=#{teacher.answer1},
+		Answer_2=#{teacher.answer2},
+		Answer_3=#{teacher.answer3},
+		Answer_4=#{teacher.answer4},
+		Answer_5=#{teacher.answer5}
+		WHERE ID = #{teacher.id} AND Student = #{student}
+	<!-- 넘버로 비교해야됨 -->	
+	</update>
+	
 	<select id="countTeacher" parameterType="string" resultType="int">
 		SELECT COUNT(*) FROM Teacher
+	</select>
+	
+	<select id="countGride" parameterType="string" resultType="int">
+		SELECT COUNT(*) FROM Gride
 	</select>
 	
 	<select id="idSelect" parameterType="string" resultType="string">

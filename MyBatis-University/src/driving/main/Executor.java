@@ -1,7 +1,9 @@
 package driving.main;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
+import org.mybatis.domain.Gride;
 import org.mybatis.domain.Teacher;
 
 public class Executor {
@@ -60,7 +62,7 @@ public class Executor {
 	}
 	
 	/* 교수 Login */
-	public static void mLogin() {
+	public static void mT_Login() {
 		
 		Manager manager = new Manager();
 		
@@ -68,6 +70,38 @@ public class Executor {
 		
 		if(login!=null) { print("\n\n" + login.toString() + "\n\n"); }
 		else { print("\n\n!! 잘못 된 정보입니다. !!\n\n"); } 
+		
+	}
+	
+	public static void mS_Login() {
+		
+		String student = "";
+		
+		UserInfo userInfo = new UserInfo();
+		student = userInfo.userSignUp();
+		
+		ArrayList<Object> arrTeacher = userInfo.getArray();
+		
+		System.out.println("시험을 시작합니다..");
+		
+		for(int i=0; i<userInfo.getArray().size(); i++) {
+			
+			//Teacher teacher = (Teacher) userInfo.getArray().get(i);
+			Gride gride = new Gride();
+			
+			gride.setTeacher((Teacher) userInfo.getArray().get(i));
+			
+			userInfo.setTeacher(gride.getTeacher());
+			gride.setStudent(student);
+			userInfo.getQuestion(); gride.getTeacher().setAnswer1(userInfo.getAnswer());
+			userInfo.getQuestion(); gride.getTeacher().setAnswer2(userInfo.getAnswer());
+			userInfo.getQuestion(); gride.getTeacher().setAnswer3(userInfo.getAnswer());
+			userInfo.getQuestion(); gride.getTeacher().setAnswer4(userInfo.getAnswer());
+			userInfo.getQuestion(); gride.getTeacher().setAnswer5(userInfo.getAnswer());
+			
+			sqlMapper.sqlGrideUpdate(gride);
+			
+		}
 		
 	}
 	
@@ -90,11 +124,10 @@ public class Executor {
 					mSignUp();
 					break;
 				case 2:
-					mLogin();
+					mT_Login();
 					break;
 				case 3:
-					UserInfo userInfo = new UserInfo();
-					userInfo.userSignUp();
+					mS_Login();
 					break;
 				default:
 					return;

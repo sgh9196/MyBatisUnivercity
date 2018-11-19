@@ -15,6 +15,7 @@
 	<typeAliases>
 		<!-- 타입 에일리어스 -->
 		<typeAlias alias="teacher" type="org.mybatis.domain.Teacher" />
+		<typeAlias alias="gride" type="org.mybatis.domain.Gride" />
 	</typeAliases>
 	
 	<!-- 환경 스택 -->
