@@ -14,7 +14,8 @@ public class UserInfo extends Plablum {
 	private Scanner sc;
 
 	private HashMap<Integer, Object> results = null;
-	private ArrayList<Object> arrTeacher;
+	private ArrayList<Object> aryGride;
+	
 	private Teacher teacher;
 	
 	public UserInfo() {
@@ -25,15 +26,15 @@ public class UserInfo extends Plablum {
 		return (new Random().nextInt((int) (count * p)) + sum)+1;
 	}
 
-	public boolean teacherOverLapCheck(ArrayList<Object> arrTeacher, int rnd) {
+	public boolean teacherOverLapCheck(int rnd) {
 
 		boolean tmp = false;
 
-		for (int itr = 0; itr < arrTeacher.size(); itr++) {
+		for(int itr=0; itr<aryGride.size(); itr++) {
 			
-			Teacher teacher = (Teacher) arrTeacher.get(itr);
+			Gride gride = (Gride) aryGride.get(itr);
 			
-			if(teacher.getNumber()== rnd) {
+			if(gride.getTeacher().getNumber() == rnd) {
 				tmp = true;
 			}
 			
@@ -44,11 +45,13 @@ public class UserInfo extends Plablum {
 	}
 
 	/* User 로그인 */
-	public String userSignUp() {
+	public void userSignUp() {
 
 		Random rd = new Random();
 		SQLMapper sqlMapper = new SQLMapper();
-
+		
+		String student = "";
+		
 		int count = 0;
 		double range = 0.0;
 		int start = 0;
@@ -56,11 +59,9 @@ public class UserInfo extends Plablum {
 		results = sqlMapper.sqlTeacherSelect(results);
 		count = sqlMapper.sqlTeacherCount();
 		
-		arrTeacher = new ArrayList<Object>(); 
+		aryGride = new ArrayList<Object>(); 
 		
-		Gride gride = new Gride();
-		
-		System.out.print("Name >> "); gride.setStudent(sc.next());
+		System.out.print("Name >> "); student = sc.next();
 		
 		for (int itr = 0; itr < 6; itr++) {
 			
@@ -69,39 +70,93 @@ public class UserInfo extends Plablum {
 			
 			int rnd = teacherRandIndex(count, range, start);
 			
-			Teacher teacher = (Teacher) results.get(rnd);
-			
-			if(teacherOverLapCheck(arrTeacher, rnd)) { itr = itr - 1; }
+			if(teacherOverLapCheck(rnd)) { itr = itr - 1; }
 			else {
 				
-				arrTeacher.add(teacher);
+				Teacher teacher = (Teacher) results.get(rnd);
+				
+				Gride gride = new Gride();
+				
 				gride.setNumber(sqlMapper.sqlGrideCount()+1);
-				gride.getTeacher().setId(teacher.getId());
-				gride.getTeacher().setQuestion(teacher.getQuestion());
+				gride.setStudent(student);
+				gride.setTeacher(teacher);
+				
+				aryGride.add(gride);
+				
 				sqlMapper.sqlGrideInsert(gride);
 				
 			}
 			
 		}
-		
-		return gride.getStudent();
-		
 		//mapPrint();
-
+	}
+	
+	/* 문제 풀이 */
+	public void problemSolving() {
+		
+		SQLMapper sqlMapper = new SQLMapper();
+		
+		for(int itr=0; itr<aryGride.size(); itr++) {
+			
+			Gride gride = (Gride) aryGride.get(itr);
+			
+			// gride 목록에 있는 Teacher 객체를 하나씩 보내줌
+			this.teacher =gride.getTeacher();
+			
+			// 문제 출력
+			getQuestion();
+			
+			// 문제 풀이
+			getAnswer();
+		
+			gride.setScore(scoreCalculation(gride));
+			gride.setRating(ratingCalculation(gride.getScore()));
+			
+			// SQL Update
+			sqlMapper.sqlGrideUpdate(gride);
+			
+		}
+		// 나머지 A
+		// 80미만 B
+		// 60미만 C
+	}
+	
+	/* 점수 계산 */
+	public int scoreCalculation(Gride gride) {
+		
+		int score = 0;
+		
+		score = (gride.getTeacher().getAnswer1().equals("O")) ? 20:0;
+		score += (gride.getTeacher().getAnswer2().equals("O")) ? 20:0;
+		score += (gride.getTeacher().getAnswer3().equals("O")) ? 20:0;
+		score += (gride.getTeacher().getAnswer4().equals("O")) ? 20:0;
+		score += (gride.getTeacher().getAnswer5().equals("O")) ? 20:0;
+		
+		return score;
+		
+	}
+	
+	public String ratingCalculation(int score) {
+		
+		String rating = "";
+		
+		if(score < 60) { rating = "C"; }
+		else if(score < 80){ rating = "B"; }
+		else { rating = "A"; }
+		
+		return rating;
+		
 	}
 	
 	public ArrayList<Object> getArray() {
-		return arrTeacher;
+		return aryGride;
 	}
-	
-	public void setTeacher(Teacher teacher) {
-		this.teacher = teacher;
-	}
-	
+
 	@Override
 	public String getQuestion() {
 		
-		System.out.print(teacher.getQuestion() + " >> ");
+		System.out.println(teacher.getQuestion() + " 문제를 시작합니다.");
+		
 		return null;
 		
 	}
@@ -111,7 +166,27 @@ public class UserInfo extends Plablum {
 		
 		String answer = "";
 		
-		answer = sc.next();
+		System.out.print("Answer 1 >> ");
+		answer = (teacher.getAnswer1().equals(sc.next())) ? "O":"X";
+		teacher.setAnswer1(answer);
+		
+		System.out.print("Answer 2 >> ");
+		answer = (teacher.getAnswer2().equals(sc.next())) ? "O":"X";
+		teacher.setAnswer2(answer);
+		
+		System.out.print("Answer 3 >> ");
+		answer = (teacher.getAnswer3().equals(sc.next())) ? "O":"X";
+		teacher.setAnswer3(answer);
+		
+		System.out.print("Answer 4 >> ");
+		answer = (teacher.getAnswer4().equals(sc.next())) ? "O":"X";
+		teacher.setAnswer4(answer);
+		
+		System.out.print("Answer 5 >> ");
+		answer = (teacher.getAnswer5().equals(sc.next())) ? "O":"X";
+		teacher.setAnswer5(answer);
+		
+		System.out.println(teacher.toString());
 		
 		return answer;
 		

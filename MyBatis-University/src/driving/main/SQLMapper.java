@@ -281,8 +281,6 @@ public class SQLMapper {
 				
 			}
 			
-			
-			
 		} catch(Exception e) {
 			e.printStackTrace();
 		}

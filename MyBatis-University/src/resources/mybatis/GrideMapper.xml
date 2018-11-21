@@ -47,10 +47,8 @@
 	
 	<insert id="grideInsert" parameterType="gride">
 		INSERT INTO Gride
-		(Number, Student, ID,  Question, Answer_1, Answer_2, Answer_3, Answer_4, Answer_5, Score, Rating)
-		VALUES (#{number}, #{student}, #{teacher.id}, #{teacher.question},
-		#{teacher.answer1}, #{teacher.answer2}, #{teacher.answer3}, #{teacher.answer4}, #{teacher.answer5},
-		#{score}, #{rating})
+		(Number, Student, ID,  Question)
+		VALUES (#{number}, #{student}, #{teacher.id}, #{teacher.question})
 	</insert>
 	
 	<update id="grideUpdate" parameterType="gride">
@@ -60,8 +58,11 @@
 		Answer_2=#{teacher.answer2},
 		Answer_3=#{teacher.answer3},
 		Answer_4=#{teacher.answer4},
-		Answer_5=#{teacher.answer5}
-		WHERE ID = #{teacher.id} AND Student = #{student}
+		Answer_5=#{teacher.answer5},
+		Score = #{score},
+		Rating = #{rating}
+		<!-- WHERE ID = #{teacher.id} AND Student = #{student} -->
+		WHERE Number = #{number}
 	<!-- 넘버로 비교해야됨 -->	
 	</update>
 	
