@@ -247,6 +247,40 @@ public class SQLMapper {
 		
 	}
 	
+	public HashMap<Integer, Object> sqlGrideSelect(HashMap<Integer, Object> results, String id) {
+		
+		try {
+			
+			results = new HashMap<Integer, Object>();
+			
+			PreparedStatement preparedStatement = null;
+			ResultSet resultSet = null;
+			
+			preparedStatement = connect().prepareStatement("SELECT Number, Student, Score, Rating FROM Gride WHERE ID = ?");
+			preparedStatement.setString(1, id);
+			resultSet = preparedStatement.executeQuery();
+			
+			while(resultSet.next()) {
+				
+				Gride gride = new Gride();
+				
+				gride.setNumber(resultSet.getInt("Number"));
+				gride.setStudent(resultSet.getString("Student"));
+				gride.setScore(resultSet.getInt("Score"));
+				gride.setRating(resultSet.getString("Rating"));
+				
+				results.put(gride.getNumber(), gride);
+				
+			}
+			
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+		
+	}
+	
 	/* 랜덤 교수 선택 */
 	public HashMap<Integer, Object> sqlTeacherSelect(HashMap<Integer, Object> results) {
 		

@@ -7,6 +7,7 @@ public class Gride {
 	private String student;
 	private int score;
 	private String rating;
+	private String rank;
 	
 	public Gride() {
 		teacher = new Teacher();
@@ -26,7 +27,9 @@ public class Gride {
 	
 	public String getRating() { return rating; }
 	public void setRating(String rating) { this.rating = rating; }
-	
+
+	public String getRank() { return rank; }
+	public void setRank(String rank) { this.rank = rank; }
 
 	@Override
 	public String toString() {

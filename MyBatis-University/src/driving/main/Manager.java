@@ -1,8 +1,11 @@
 package driving.main;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Scanner;
 
+import org.mybatis.domain.Gride;
 import org.mybatis.domain.Teacher;
 
 public class Manager extends Plablum {
@@ -92,7 +95,6 @@ public class Manager extends Plablum {
 		return teacher;
 		
 	}
-
 	
 	/* 교수 로그인 */
 	public Teacher s_Login(Teacher login) {
@@ -114,10 +116,75 @@ public class Manager extends Plablum {
 		
 	}
 	
+	
+	/* 교수 과목 듣는 사람 */
+	public void s_studentList(String id) {
+		
+		HashMap<Integer, Object> results = null;
+		
+		SQLMapper sqlMapper = new SQLMapper();
+		
+		results = sqlMapper.sqlGrideSelect(results, id);
+		
+		Iterator<Integer> itr = results.keySet().iterator();
+
+		while (itr.hasNext()) {
+			
+			int key = itr.next();
+			
+			Gride gride = (Gride) results.get(key);
+			
+			print("[" + gride.getNumber() + "] > " + gride.getStudent() + "\n");
+			
+		}
+		
+	}
+	
+	public void scoreList(String id) {
+		
+		HashMap<Integer, Object> results = null;
+		SQLMapper sqlMapper = new SQLMapper();
+		
+		results = sqlMapper.sqlGrideSelect(results, id);
+		
+		Iterator<Integer> itr = results.keySet().iterator();
+
+		ArrayList<Gride> grideList = new ArrayList<Gride>();
+		
+		while (itr.hasNext()) {
+			int key = itr.next();
+			grideList.add((Gride) results.get(key));
+		}
+		
+		for(int i=0; i<grideList.size(); i++) {
+			int count = (grideList.size()+1);
+			
+			for(int k=0; k<grideList.size(); k++) {
+				if(grideList.get(i).getScore() >= grideList.get(k).getScore()) {
+					count = count - 1;
+				}
+			}
+			print("[" + grideList.get(i).getStudent() + "] 학생 [" + count + "]등\n");
+		}
+		
+	}
+	
 	/* 교수 ID 확인 */
 	public boolean s_idCheck(SQLMapper sqlMapper, String id) {
 		
 		return (sqlMapper.sqlIDCheck(id)==null) ? true:false;
+		
+	}
+	
+		
+	public void loginQuestion(Teacher teacher) {
+		
+		print("\n" + teacher.getId() + "님의 문제 >> " + teacher.getQuestion() + "   |   ");
+		print(teacher.getAnswer1() + "   ");
+		print(teacher.getAnswer2() + "   ");
+		print(teacher.getAnswer3() + "   ");
+		print(teacher.getAnswer4() + "   ");
+		print(teacher.getAnswer5() + "\n\n");
 		
 	}
 	

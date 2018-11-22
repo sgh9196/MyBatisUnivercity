@@ -1,9 +1,7 @@
 package driving.main;
 
-import java.util.ArrayList;
 import java.util.Scanner;
 
-import org.mybatis.domain.Gride;
 import org.mybatis.domain.Teacher;
 
 public class Executor {
@@ -68,11 +66,35 @@ public class Executor {
 		
 		login = manager.s_Login(login);
 		
-		if(login!=null) { print("\n\n" + login.toString() + "\n\n"); }
-		else { print("\n\n!! 잘못 된 정보입니다. !!\n\n"); } 
+		if(login!=null) { 
+			
+			while(true) {
+				
+				System.out.print("1. 문제보기  2. 학생보기  3. 석차보기\n>> ");
+				
+				switch(sc.nextInt()) {
+					case 1:
+						manager.loginQuestion(login);
+						break;
+					case 2:
+						manager.s_studentList(login.getId());
+						break;
+					case 3:
+						manager.scoreList(login.getId());
+						break;
+					default:
+						return;
+				}
+				
+			}
+
+		}
+		else {
+			print("\n\n!! 잘못 된 정보입니다. !!\n\n"); 
+		} 
 		
 	}
-	
+	// 내가 낸 문제보기, 학생, 석차보기
 	public static void mS_Login() {
 		
 		UserInfo userInfo = new UserInfo();
